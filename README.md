@@ -25,5 +25,16 @@ Each of the threads notifies the main thread of its test results by writing to t
 If a threads finds out the part it's testing is valid, it writes 1 to the appropriate entry. If not, it writes 0.  
 The main thread wait for all the threads to complete the test, and then scan the results, and come to a final conclusion as to whether the solution is valid or not.
 
+This is the data structure the threads use:
+```
+typedef struct {
+	int board[81];
+	char result[27];
+} sudokuboard;
+```
+
+1) board - the solution to the Sudoku we need to check
+2) result - the answers of the threads
+
 #### Second Version: Using *mutex* and *condition variable*:
 
