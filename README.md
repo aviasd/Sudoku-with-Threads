@@ -54,4 +54,4 @@ typedef struct {
 ```
 1) missions - the tasks list
 2) currentMission - the last task that pulled by a thread
-4) numOfCompletedMissions - the number of tasks the threads needs to do
+4) numOfCompletedMissions - the number of tasks the threads need to do
