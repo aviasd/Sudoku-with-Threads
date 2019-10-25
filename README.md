@@ -25,16 +25,33 @@ Each of the threads notifies the main thread of its test results by writing to t
 If a threads finds out the part it's testing is valid, it writes 1 to the appropriate entry. If not, it writes 0.  
 The main thread wait for all the threads to complete the test, and then scan the results, and come to a final conclusion as to whether the solution is valid or not.
 
-This is the data structure the threads use:
+This is the data structure that the threads use:
 ```
 typedef struct {
 	int board[81];
 	char result[27];
 } sudokuboard;
 ```
-
 1) board - the solution to the Sudoku we need to check
 2) result - the answers of the threads
 
 #### Second Version: Using *mutex* and *condition variable*:
+The main thread prepares a list of 27 tasks (for example: "check validity of row number 3"), in a simple data structure.  
+After the initialization of the data structure with the tasks list, the main thread creates *N* (a fixed number) of threads to do the job.  
+Every thread goes to the tasks list, "pulls" a task from the list and executes it. The threads continue to "pull" tasks from the list and execute them until the entire list is completed.  
+All the tasks is being performed exactly once.
+Unlike the first version, a single int global variable, common to all threads, is being used for reporting the test results.  
+Two mutexes is being used to protect all the data structures that are shared among all threads (tasks list and result variable).  
+Condition variable is being used to let the main thread know when it can prints the end result to the output.
 
+This is the data structure that the threads use:
+```
+typedef struct {
+	int missions[27];
+	int currentMission;
+	int numOfCompletedMissions;
+} sudokutasks;
+```
+1) missions - the tasks list
+2) currentMission - the last task that pulled by a thread
+4) numOfCompletedMissions - the number of tasks the threads needs to do
